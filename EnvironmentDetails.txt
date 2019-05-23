@@ -1,0 +1,25 @@
+
+MongoDB Logs - var/log/mongodb/{mongod.log}
+MongoDB Data - var/lib/mongodb/
+
+Start Mongo - sudo service mongod start
+Stop Mongo - sudo service mongod stop
+Restart Mongo - sudo service mongod restart
+
+Middleware - 
+Used for authentication as an example
+app.use(req,res,next) - Include middlewares from 3rd-party modules 
+
+app.use((req, res, next) => {
+    // console.log(Date.now());
+    req.name = 'Syed Hasan';
+    next();
+});
+
+
+- - - - - - - - - - - 
+
+Module Logs:
+
+1. Installed 'express'
+2. Installed 'nodemon' - keeps server running
