@@ -1,8 +1,16 @@
 const express = require('express');
 const router = express.Router();
+const mongoose = require('mongoose');
+
+// Load Idea model
+require('../models/Idea');
+const Idea = mongoose.model('ideas');
+
+
+// Remove the base route /ideas. It'll be set by default
 
 // App Ideas Page
-router.get('/ideas', (req, res) => {
+router.get('/', (req, res) => {
     Idea.find({})
         .sort({
             date: 'desc'
@@ -16,12 +24,12 @@ router.get('/ideas', (req, res) => {
 });
 
 // Idea Form Route
-router.get('/ideas/add', (req, res) => {
+router.get('/add', (req, res) => {
     res.render('ideas/add');
 });
 
 //  Edit Idea Form Route
-router.get('/ideas/edit/:id', (req, res) => {
+router.get('/edit/:id', (req, res) => {
     Idea.findOne({
             _id: req.params.id
         })
@@ -32,7 +40,7 @@ router.get('/ideas/edit/:id', (req, res) => {
 
 
 // Add Process Form
-router.post('/ideas', (req, res) => {
+router.post('', (req, res) => {
     // Values from the form
     // console.log(req.body);
 
@@ -77,7 +85,7 @@ router.post('/ideas', (req, res) => {
 });
 
 // Edit Form Process
-router.put('/ideas/:id', (req, res) => {
+router.put('/:id', (req, res) => {
     Idea.findOne({
         _id: req.params.id
     })
@@ -94,7 +102,7 @@ router.put('/ideas/:id', (req, res) => {
 });
 
 // Delete Request
-router.delete('/ideas/:id', (req, res) => {
+router.delete('/:id', (req, res) => {
     Idea.remove({
         // Query: Match _id with our ID
         _id: req.params.id

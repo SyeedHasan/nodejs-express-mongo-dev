@@ -28,4 +28,6 @@ Module Logs:
 5. Installed 'method-override' - Allows using other HTTP methods like put, delete etc.
 6. Installed 'express-session' - Makes a session in express
 7. Installed 'connect-flash' - Flash messages for errors and stuff
-8. Installed 'passport' - 
+8. Installed 'bcryptjs' - Encrypting passwords
+9. Installed 'passport' - Authentication library
+10. Installed 'passport-local' - Local strategies for authentication

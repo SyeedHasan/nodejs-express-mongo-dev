@@ -2,12 +2,23 @@ const express = require('express');
 const exphbs = require('express-handlebars');
 const methodOverride = require('method-override');
 const mongoose = require('mongoose');
+const passport = require('passport');
 const bodyParser = require('body-parser');
 const flash = require('connect-flash');
 const session = require('express-session');
+// Path module for static files - file path stuff
+const path = require('path');
 
 // Initialize our application
 const app = express();
+
+// Load routes
+const ideas = require('./routes/ideas');
+const users = require('./routes/users');
+
+// Passport config
+require('./config/passport')(passport);
+
 
 // Connect to Mongoose
     // Pass in the database from local or remote db
@@ -18,9 +29,6 @@ mongoose.connect('mongodb://localhost/vidjot-dev', {
     .then(() => console.log('MongoDB Connected... '))
     .catch((error) => console.log('ERROR: ' + error));
 
-// Load Idea model
-require('./models/Idea');
-const Idea = mongoose.model('ideas');
 
 // Handlebars Middleware 
 app.engine('handlebars', exphbs());
@@ -31,6 +39,9 @@ app.use(bodyParser.urlencoded({
     extended: false
 }));
 app.use(bodyParser.json());
+
+// Static Folder
+app.use(express.static(path.join(__dirname, 'public')))
 
 // Method-override Middleware
 app.use(methodOverride('_method'));
@@ -55,8 +66,6 @@ app.use(function(req, res, next) {
     // call next middleware
 });
 
-
-
 // Routing - Index Route - Use HTTP methods
 app.get('/', (req, res) => {
     const title = 'Syed';
@@ -71,16 +80,9 @@ app.get('/about', (req, res) => {
 });
 
 
-// User login route
-app.get('/users/login', (req, res) => {
-
-});
-
-// User register route
-app.get('/users/register', (req, res) => {
-    
-});
-
+// USE ROUTES - Send it to the ideas file
+app.use('/ideas', ideas);
+app.use('/users', users);
 
 // CONSTANTS
 const PORT = 5000;
