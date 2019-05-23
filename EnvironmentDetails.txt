@@ -23,3 +23,9 @@ Module Logs:
 
 1. Installed 'express'
 2. Installed 'nodemon' - keeps server running
+3. Installed 'mongoose' - ODM for Mongo
+4. Installed 'body-parser' - Parses the POST request data and submits as req.body
+5. Installed 'method-override' - Allows using other HTTP methods like put, delete etc.
+6. Installed 'express-session' - Makes a session in express
+7. Installed 'connect-flash' - Flash messages for errors and stuff
+8. Installed 'passport' - 
