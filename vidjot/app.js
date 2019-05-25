@@ -95,7 +95,7 @@ app.use('/users', users);
 
 // CONSTANTS
 // This first arg is for heroku
-const PORT = process.event.PORT || 5000; //Local
+const PORT = process.env.PORT || 5000; //Local
 
 
 // Listen on a port

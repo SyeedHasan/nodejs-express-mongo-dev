@@ -1,12 +1,9 @@
-
-module.export = {
-    ensureAuthenticated: function(req, res, next) {
-        if(req.isAuthenticated()){
+module.exports = {
+    ensureAuthenticated: function (req, res, next) {
+        if (req.isAuthenticated()) {
             return next();
-            // Run the next piece of function
         }
-        req.flash('error_msg', 'Not authorized!');
+        req.flash('error_msg', 'Not Authorized');
         res.redirect('/users/login');
-
-    } 
+    }
 }
