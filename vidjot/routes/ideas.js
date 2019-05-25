@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
+const {
+    ensureAuthenticated
+} = require('../helpers/auth');
 
 // Load Idea model
 require('../models/Idea');
@@ -10,8 +13,12 @@ const Idea = mongoose.model('ideas');
 // Remove the base route /ideas. It'll be set by default
 
 // App Ideas Page
-router.get('/', (req, res) => {
-    Idea.find({})
+// Boots out when not authenticated
+router.get('/', ensureAuthenticated, (req, res) => {
+    // Search ideas from logged in user only
+    Idea.find({
+            user: req.user.id
+        })
         .sort({
             date: 'desc'
         })
@@ -24,23 +31,32 @@ router.get('/', (req, res) => {
 });
 
 // Idea Form Route
-router.get('/add', (req, res) => {
+// Now it ensures authentication - added later
+router.get('/add', ensureAuthenticated, (req, res) => {
     res.render('ideas/add');
 });
 
 //  Edit Idea Form Route
-router.get('/edit/:id', (req, res) => {
+router.get('/edit/:id', ensureAuthenticated, (req, res) => {
     Idea.findOne({
             _id: req.params.id
         })
-        .then(idea => res.render('ideas/edit', {
-            idea: idea
-        }))
+        .then(idea => {
+            if (idea.user != req.user.id) {
+                req.flash('error_msg', 'You are not authorized');
+                req.redirect('/ideas');
+            } else {
+                res.render('ideas/edit', {
+                    idea: idea
+                })
+            }
+
+        })
 });
 
 
 // Add Process Form
-router.post('', (req, res) => {
+router.post('', ensureAuthenticated, (req, res) => {
     // Values from the form
     // console.log(req.body);
 
@@ -71,7 +87,8 @@ router.post('', (req, res) => {
     else {
         const newUser = {
             title: req.body.title,
-            details: req.body.details
+            details: req.body.details,
+            user: req.user.id
         }
         // Mongoose model
         new Idea(newUser)
@@ -85,11 +102,11 @@ router.post('', (req, res) => {
 });
 
 // Edit Form Process
-router.put('/:id', (req, res) => {
+router.put('/:id', ensureAuthenticated, (req, res) => {
     Idea.findOne({
-        _id: req.params.id
-    })
-        .then( idea => {
+            _id: req.params.id
+        })
+        .then(idea => {
             // Update the idea
             idea.title = req.body.title;
             idea.details = req.body.details;
@@ -97,17 +114,18 @@ router.put('/:id', (req, res) => {
             idea.save()
                 .then(idea => {
                     req.flash('success_msg', 'Video idea updated successfully!');
-                    res.redirect('/ideas') });
+                    res.redirect('/ideas')
+                });
         });
 });
 
 // Delete Request
-router.delete('/:id', (req, res) => {
+router.delete('/:id', ensureAuthenticated, (req, res) => {
     Idea.remove({
-        // Query: Match _id with our ID
-        _id: req.params.id
-    })    
-        .then( () => {
+            // Query: Match _id with our ID
+            _id: req.params.id
+        })
+        .then(() => {
             req.flash('success_msg', 'Video idea deleted successfully!');
             res.redirect('/ideas');
         })

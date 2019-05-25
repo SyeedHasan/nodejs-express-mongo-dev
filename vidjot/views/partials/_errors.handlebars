@@ -1,3 +1,11 @@
+{{!-- Passport makes an error array, not errors --}}
+{{#if errors }}
+    <div class="alert alert-danger">
+        {{error}}
+    </div>
+{{/if}}
+
+
 {{!-- Loop through errors --}}
 
 {{#each errors }}

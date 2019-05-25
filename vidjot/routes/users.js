@@ -19,13 +19,17 @@ router.get('/register', (req, res) => {
     res.render('users/register');
 });
 
+
+
 // Login Form POST - Passport
 router.post('/login', (req, res, next) => {
+    // Arguments - name of a strategy, object with options
     passport.authenticate('local', {
         successRedirect: '/ideas',
         failureRedirect: '/users/login',
         failureFlash: true,
     })(req, res, next);
+    // Next, creating our own passport strategy in config!
 });
 
 // Register Form POST
@@ -92,6 +96,13 @@ router.post('/register', (req, res) => {
 
     }
 
+});
+
+// User Logout Route
+router.get('/logout', (req, res) => {
+    req.logout();
+    req.flash('success_msg', 'You are logged out!');
+    res.redirect('/users/login');
 });
 
 module.exports = router;
